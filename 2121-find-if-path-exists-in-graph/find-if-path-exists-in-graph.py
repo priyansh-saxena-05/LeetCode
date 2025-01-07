@@ -3,23 +3,24 @@ from collections import defaultdict, deque
 class Solution:
     def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
         graph = defaultdict(list)
-        for edge in edges:
-            u, v = edge
+        for u, v in edges:
             graph[u].append(v)
             graph[v].append(u)
         
-        queue = deque()
-    
-        visited = [False] * n
-        visited[source] = True
-        queue.append(source)
+        queue = deque([source])
+        visited = set()
+        visited.add(source)
 
+        # Perform BFS
         while queue:
             curr = queue.popleft()
-            for neigh in graph[curr]:
-                if not visited[neigh]:
-                    visited[neigh] = True
-                    queue.append(neigh)
+            
             if curr == destination:
                 return True
+
+            for neighbor in graph[curr]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append(neighbor)
+        
         return False
